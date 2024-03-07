@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">City explorer</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="lorem_ipsum">
+        Hello first fragment!
+    </string>
+    <string name="show_map">Show Map</string>
+    <string name="new_place">New Place</string>
+    <string name="my_places_list">My Places</string>
+    <string name="about">About</string>
+    <string name="about_text">
+        <i>City Explorer</i> je aplikacija koja ce vam pomoci da pronadjete najbolja turisticka mesta u gradu.
+        Na mapi se nalaze ocene i slike najposecenijih mesta u gradu, bilo da su to restorani, kulturno istorijski spomenici, primeri arhitektura grada ili parkovi.
+        Nadamo se da cete uspesno pronaci zeljene lokacije!
+    </string>
+    <string name="ok">OK</string>
+    <string name="title_activity_my_places_list">MyPlacesList</string>
+</resources>
