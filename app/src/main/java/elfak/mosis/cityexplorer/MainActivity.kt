@@ -50,8 +50,7 @@ class MainActivity : AppCompatActivity() {
             R.id.action_show_map -> Toast.makeText(this, "Show Map!", Toast.LENGTH_SHORT).show()
             R.id.action_new_place -> Toast.makeText(this, "New Place!", Toast.LENGTH_SHORT).show()
             R.id.action_my_places_list -> {
-                val i: Intent = Intent(this, MyPlacesList::class.java)
-                startActivity(i)
+                this.findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.action_FirstFragment_to_SecondFragment)
             }
             R.id.action_about -> {
                 val i: Intent = Intent(this, About::class.java)
