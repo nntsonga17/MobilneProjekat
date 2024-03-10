@@ -2,27 +2,46 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph2"
-    app:startDestination="@id/First2Fragment">
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/HomeFragment">
 
     <fragment
-        android:id="@+id/First2Fragment"
-        android:name="elfak.mosis.cityexplorer.First2Fragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first2">
+        android:id="@+id/HomeFragment"
+        android:name="elfak.mosis.cityexplorer.HomeFragment"
+        android:label="@string/home_fragment_label"
+        tools:layout="@layout/fragment_home"
+        tools:ignore="ExtraText">
 
         <action
-            android:id="@+id/action_First2Fragment_to_Second2Fragment"
-            app:destination="@id/Second2Fragment" />
+            android:id="@+id/action_HomeFragment_to_ListFragment"
+            app:destination="@+id/ListFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_EditFragment"
+            app:destination="@+id/EditFragment" />
+
     </fragment>
     <fragment
-        android:id="@+id/Second2Fragment"
-        android:name="elfak.mosis.cityexplorer.Second2Fragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second2">
-
+        android:id="@+id/ListFragment"
+        android:name="elfak.mosis.cityexplorer.ListFragment"
+        android:label="@string/list_fragment_label"
+        tools:layout="@layout/fragment_list">
         <action
-            android:id="@+id/action_Second2Fragment_to_First2Fragment"
-            app:destination="@id/First2Fragment" />
+            android:id="@+id/action_ListFragment_to_HomeFragment"
+            app:destination="@+id/HomeFragment"/>
+        <action
+            android:id="@+id/action_ListFragment_to_EditFragment"
+            app:destination="@+id/EditFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/EditFragment"
+        android:name="elfak.mosis.cityexplorer.EditFragment"
+        android:label="@string/edit_fragment_label"
+        tools:layout="@layout/fragment_edit">
+        <action
+            android:id="@+id/action_EditFragment_to_HomeFragment"
+            app:destination="@+id/HomeFragment"/>
+        <action
+            android:id="@+id/action_EditFragment_to_ListFragment"
+            app:destination="@+id/ListFragment"/>
     </fragment>
 </navigation>
