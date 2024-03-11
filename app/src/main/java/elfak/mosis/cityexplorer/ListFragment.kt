@@ -2,18 +2,25 @@ package elfak.mosis.cityexplorer
 
 import android.content.Context
 import android.os.Bundle
+import android.view.ContextMenu
+import android.view.ContextMenu.ContextMenuInfo
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.View.OnCreateContextMenuListener
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.AdapterView.AdapterContextMenuInfo
 import android.widget.ArrayAdapter
 import android.widget.ListAdapter
 import android.widget.ListView
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import elfak.mosis.cityexplorer.data.MyPlaces
 import elfak.mosis.cityexplorer.databinding.FragmentListBinding
@@ -45,7 +52,38 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val myPlacesList: ListView = requireView().findViewById<ListView>(R.id.my_places_list)
-        myPlacesList.adapter = ArrayAdapter<String>(view.context, android.R.layout.simple_list_item_1, myPlacesViewModel.myPlacesList)
+        myPlacesList.adapter = ArrayAdapter<MyPlaces>(view.context, android.R.layout.simple_list_item_1, myPlacesViewModel.myPlacesList)
+        myPlacesList.setOnItemClickListener(object : AdapterView.OnItemClickListener{
+            override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                var MyPlaces: MyPlaces = p0?.adapter?.getItem(p2) as MyPlaces
+                myPlacesViewModel.selected = null
+                view.findNavController().navigate(R.id.action_ListFragment_to_ViewFragment)
+            }
+        })
+        myPlacesList.setOnCreateContextMenuListener(object: View.OnCreateContextMenuListener{
+            override fun onCreateContextMenu(menu: ContextMenu, v: View?, menuInfo: ContextMenuInfo){
+                val info = menuInfo as AdapterContextMenuInfo
+                val myPlaces: MyPlaces = myPlacesViewModel.myPlacesList[info.position]
+                menu.setHeaderTitle(myPlaces.name)
+                menu.add(0, 1, 1, "View Place")
+                menu.add(0, 2, 2, "Edit Place")
+                menu.add(0, 3, 3, "Delete Place")
+            }
+        })
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        val info = item.menuInfo as AdapterContextMenuInfo
+        if(item.itemId === 1) {
+            myPlacesViewModel.selected = myPlacesViewModel.myPlacesList[info.position]
+            this.findNavController().navigate(R.id.action_ListFragment_to_ViewFragment)
+        }else if (item.itemId === 2){
+            myPlacesViewModel.selected = myPlacesViewModel.myPlacesList[info.position]
+            this.findNavController().navigate(R.id.action_ListFragment_to_EditFragment)
+        }else if (item.itemId === 3){
+            Toast.makeText(this.context, "Delete item", Toast.LENGTH_SHORT).show()
+        }
+        return super.onContextItemSelected(item)
     }
 
 
