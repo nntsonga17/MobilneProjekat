@@ -29,4 +29,5 @@
     <string name="editmyplace_cancel_label">Cancel</string>
     <string name="viewmyplace_finished_button">Close</string>
     <string name="editmyplace_save_label">Save</string>
+    <string name="map_fragment_label">Map</string>
 </resources>
