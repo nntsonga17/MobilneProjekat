@@ -30,4 +30,7 @@
     <string name="viewmyplace_finished_button">Close</string>
     <string name="editmyplace_save_label">Save</string>
     <string name="map_fragment_label">Map</string>
+    <string name="editmyplace_longitude_label">Longitude</string>
+    <string name="editmyplace_latitude_label">Latitude</string>
+    <string name="editmyplace_button_set_coordinates">Set</string>
 </resources>

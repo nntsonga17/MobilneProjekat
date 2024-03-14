@@ -1,6 +1,8 @@
 package elfak.mosis.cityexplorer
 
+import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.PreferenceManager
 import androidx.fragment.app.Fragment
@@ -10,15 +12,26 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import elfak.mosis.cityexplorer.model.LocationViewModel
+import elfak.mosis.cityexplorer.model.MyPlacesViewModel
 import org.osmdroid.config.Configuration
+import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.MapEventsOverlay
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 import java.util.prefs.Preferences
 
 
 class MapFragment : Fragment() {
     lateinit var map: MapView
+    private val locationViewModel: LocationViewModel by activityViewModels()
+    private val myPlacesViewModel: MyPlacesViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,10 +55,46 @@ class MapFragment : Fragment() {
         var ctx: Context? = activity?.applicationContext
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences((ctx)))
         map = requireView().findViewById<MapView>(R.id.map)
-        map.controller.setZoom(15.0)
-        val startPoint = GeoPoint(43.3209, 21.8958)
-        map.controller.setCenter(startPoint)
+        map.setMultiTouchControls(true)
+        if (ActivityCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            requestPermissionLauncher.launch(
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        } else{
+            setupMap()
+        }
     }
+    private fun setupMap(){
+        var startPoint:GeoPoint = GeoPoint(43.3289, 21.8958)
+        map.controller.setZoom(15.0)
+        if(locationViewModel.setLocation ){
+            setOnMapClickOverLay()
+        }
+        else {
+            if(myPlacesViewModel.selected != null){
+                startPoint = GeoPoint(myPlacesViewModel.selected!!.latitude.toDouble(), myPlacesViewModel.selected!!.longitude.toDouble())
+            } else{
+                setMyLocationOverLay()
+            }
+        }
+        map.controller.animateTo(startPoint)
+
+    }
+    private fun setMyLocationOverLay(){
+        var myLocationOverLay = MyLocationNewOverlay(GpsMyLocationProvider(activity), map)
+        myLocationOverLay.enableMyLocation()
+        map.overlays.add(myLocationOverLay)
+    }
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                setMyLocationOverLay()
+                setOnMapClickOverLay()
+            }
+        }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
@@ -55,6 +104,22 @@ class MapFragment : Fragment() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+    private fun setOnMapClickOverLay(){
+        var receive = object:MapEventsReceiver{
+            override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
+                var lon = p?.longitude.toString()
+                var lat = p?.latitude.toString()
+                locationViewModel.setLocation(lon, lat)
+                findNavController().popBackStack()
+                return true
+            }
+            override fun longPressHelper(p: GeoPoint?): Boolean {
+                return false
+            }
+        }
+        var overlayEvents = MapEventsOverlay(receive)
+        map.overlays.add(overlayEvents)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {

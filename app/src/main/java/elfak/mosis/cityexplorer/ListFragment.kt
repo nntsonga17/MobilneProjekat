@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.AdapterContextMenuInfo
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.Toast
@@ -68,6 +69,7 @@ class ListFragment : Fragment() {
                 menu.add(0, 1, 1, "View Place")
                 menu.add(0, 2, 2, "Edit Place")
                 menu.add(0, 3, 3, "Delete Place")
+                menu.add(0, 4, 4, "Show on Map")
             }
         })
     }
@@ -81,7 +83,12 @@ class ListFragment : Fragment() {
             myPlacesViewModel.selected = myPlacesViewModel.myPlacesList[info.position]
             this.findNavController().navigate(R.id.action_ListFragment_to_EditFragment)
         }else if (item.itemId === 3){
-            Toast.makeText(this.context, "Delete item", Toast.LENGTH_SHORT).show()
+            myPlacesViewModel.myPlacesList.removeAt(info.position)
+            val myPlacesList: ListView = requireView().findViewById<ListView>(R.id.my_places_list)
+            myPlacesList.adapter = this@ListFragment.context?.let { ArrayAdapter<MyPlaces>(it,android.R.layout.simple_list_item_1, myPlacesViewModel.myPlacesList) }
+        }else if(item.itemId === 4){
+            myPlacesViewModel.selected = myPlacesViewModel.myPlacesList[info.position]
+            this.findNavController().navigate(R.id.action_ListFragment_to_MapFragment)
         }
         return super.onContextItemSelected(item)
     }
