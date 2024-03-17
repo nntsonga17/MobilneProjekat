@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "582915978336",
+    "project_id": "cityexplorer17-a25ec",
+    "storage_bucket": "cityexplorer17-a25ec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:582915978336:android:bf5360d25b3c3e920cbf05",
+        "android_client_info": {
+          "package_name": "elfak.mosis.cityexplorer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhyO1nLcpXWiCa9epwn9FQFyC11htMXPE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

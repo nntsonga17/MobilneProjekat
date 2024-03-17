@@ -33,4 +33,11 @@
     <string name="editmyplace_longitude_label">Longitude</string>
     <string name="editmyplace_latitude_label">Latitude</string>
     <string name="editmyplace_button_set_coordinates">Set</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
+    <string name="click_to_login">Click to Login</string>
+    <string name="click_to_register">Click to Register</string>
+    <string name="logout">Logout</string>
 </resources>

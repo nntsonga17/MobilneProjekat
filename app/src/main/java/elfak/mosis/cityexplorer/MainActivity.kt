@@ -10,9 +10,13 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
 import android.widget.MediaController
+import android.widget.TextView
 import android.widget.Toast
 import androidx.navigation.NavController
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import elfak.mosis.cityexplorer.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -20,14 +24,40 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
+    private lateinit var auth: FirebaseAuth
+    private lateinit var user: FirebaseUser
+    private lateinit var button: Button
+    private lateinit var textView: TextView
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
+
+        auth = FirebaseAuth.getInstance()
+        textView = findViewById<TextView>(R.id.user_details)
+        button = findViewById<Button>(R.id.logoutButton)
+        user = auth.currentUser!!
+        if (user != null) {
+            textView.text = user.email
+        } else {
+            val intent = Intent(applicationContext, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+        button.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            val intent = Intent(applicationContext, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
 
 
         navController = findNavController(R.id.nav_host_fragment_content_main)
