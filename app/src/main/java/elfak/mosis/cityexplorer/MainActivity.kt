@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var auth: FirebaseAuth
-    private lateinit var user: FirebaseUser
     private lateinit var logoutButton: Button
 
 

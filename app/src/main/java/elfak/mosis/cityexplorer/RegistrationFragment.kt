@@ -7,35 +7,59 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import elfak.mosis.cityexplorer.R.layout.fragment_registration
+import elfak.mosis.cityexplorer.data.UserData
+import elfak.mosis.cityexplorer.databinding.FragmentRegistrationBinding
+import elfak.mosis.cityexplorer.model.UserViewModel
 
 
 class RegistrationFragment : Fragment() {
-    private lateinit var editTextUserName: TextInputEditText
-    private lateinit var editTextPassword: TextInputEditText
-    private lateinit var buttonReg: Button
-    private lateinit var auth: FirebaseAuth
-    private lateinit var textView: TextView
-    private lateinit var editTextFirstName: TextInputEditText
-    private lateinit var editTextLastName: TextInputEditText
-    private lateinit var editTextPhoneNumber: TextInputEditText
+    private val CAMERA_PERMISSION_REQUEST_CODE = 1001
+    lateinit var editTextUsername: EditText
+    lateinit var editTextPassword: EditText
+    lateinit var buttonReg: Button
+    lateinit var auth: FirebaseAuth
+    lateinit var textView: TextView
+    lateinit var editTextFirstName: EditText
+    lateinit var editTextLastName: EditText
+    lateinit var editTextPhoneNumber: EditText
+    lateinit var progress: ProgressBar
+    lateinit var database: DatabaseReference
+    lateinit var imgUrl: String
+    private val REQUEST_IMAGE_CAPTURE = 1
+    lateinit var user: UserData
+    private val sharedViewModel: UserViewModel by activityViewModels()
+
+    private lateinit var openCameraButton: Button
+    private lateinit var imageView: ImageView
+    private lateinit var pictureReg: ProgressBar
+
+    private var _binding: FragmentRegistrationBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_registration, container, false)
-        editTextUserName = view.findViewById(R.id.username)
+        val view = inflater.inflate(fragment_registration, container, false)
+        editTextUsername = view.findViewById(R.id.username)
         editTextPassword = view.findViewById(R.id.password)
         buttonReg = view.findViewById(R.id.register_button)
         textView = view.findViewById(R.id.loginNow)
         editTextPhoneNumber = view.findViewById(R.id.phoneNumber)
         editTextFirstName = view.findViewById(R.id.firstName)
         editTextLastName = view.findViewById(R.id.lastName)
+
 
 
         auth = FirebaseAuth.getInstance()
@@ -45,7 +69,7 @@ class RegistrationFragment : Fragment() {
         }
 
         buttonReg.setOnClickListener {
-            val username = editTextUserName.text.toString()
+            val username = editTextUsername.text.toString()
             val password = editTextPassword.text.toString()
             val phoneNumber = editTextPhoneNumber.text.toString()
             val firstName = editTextFirstName.text.toString()
