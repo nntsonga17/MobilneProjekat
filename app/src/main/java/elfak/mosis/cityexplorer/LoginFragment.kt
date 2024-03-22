@@ -7,12 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.Toast.makeText
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
+import elfak.mosis.cityexplorer.model.UserViewModel
 
 
 class LoginFragment : Fragment() {
@@ -21,6 +24,8 @@ class LoginFragment : Fragment() {
     private lateinit var buttonLogin: Button
     private lateinit var auth: FirebaseAuth
     private lateinit var textView: TextView
+    lateinit var progress: ProgressBar
+    private  val sharedViewModel: UserViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +44,7 @@ class LoginFragment : Fragment() {
         }
 
         buttonLogin.setOnClickListener {
+            progress.visibility=View.VISIBLE
             val username = editTextUserName.text.toString()
             val password = editTextPassword.text.toString()
 
@@ -50,6 +56,8 @@ class LoginFragment : Fragment() {
             auth.signInWithEmailAndPassword(username, password)
                 .addOnCompleteListener(requireActivity()) { task ->
                     if (task.isSuccessful) {
+                        progress.visibility=View.GONE
+                        sharedViewModel.name = username
                         // Ako je prijava uspešna, prikaži odgovarajuću poruku korisniku
                         findNavController().navigate(R.id.action_LoginFragment_to_HomeFragment)
 

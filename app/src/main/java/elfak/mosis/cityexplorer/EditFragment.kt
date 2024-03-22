@@ -1,108 +1,338 @@
 package elfak.mosis.cityexplorer
 
+import android.Manifest
+import android.app.Activity
+import android.content.ContentValues.TAG
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.provider.MediaStore
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.Spinner
+import android.widget.TextView
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import elfak.mosis.cityexplorer.R.id.progressPlace
 import elfak.mosis.cityexplorer.data.MyPlaces
+import elfak.mosis.cityexplorer.data.UserData
 import elfak.mosis.cityexplorer.model.LocationViewModel
-import elfak.mosis.cityexplorer.model.MyPlacesViewModel
+import elfak.mosis.cityexplorer.model.UserViewModel
+import org.w3c.dom.Text
+import java.io.ByteArrayOutputStream
+import java.util.Calendar
 
 
 class EditFragment : Fragment() {
-    private val locationViewModel: LocationViewModel by activityViewModels()
-    private val myPlacesViewModel: MyPlacesViewModel by activityViewModels()
+    private  var imgUrl:String=""
+    private val REQUEST_IMAGE_CAPTURE = 1
+    val GALLERY_PERMISSION_REQUEST_CODE = 1002
+    val CAMERA_PERMISSION_REQUEST_CODE = 1001
+
+
+
+    private  val sharedViewModel:UserViewModel by activityViewModels()
+
+    lateinit var placeName:EditText
+    lateinit var description:EditText
+    lateinit var grade:EditText
+    lateinit var progress:ProgressBar
+    lateinit var save:Button
+    lateinit var cancel:Button
+    lateinit var place: MyPlaces
+    lateinit var latitude:EditText
+    lateinit var longitude:EditText
+    lateinit var set:Button
+    lateinit var picture:ImageView
+    ////////////////////////////////////////
+    lateinit var pictureWait:ProgressBar
+    private val locationViewModel:LocationViewModel by activityViewModels()
+
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_edit, container, false)
-    }
+        val view=inflater.inflate(R.layout.fragment_edit,container,false)
+
+        picture=view.findViewById(R.id.objectPic)
+        picture.visibility=View.VISIBLE
+        placeName=view.findViewById(R.id.editmyplace_name_edit)
+        description=view.findViewById(R.id.editmyplace_desc_edit)
+        grade=view.findViewById(R.id.editmyplace_grade_edit)
+        progress=view.findViewById(R.id.progressPlace)
+        pictureWait=view.findViewById(R.id.pictureWait)
+        save=view.findViewById(R.id.editmyplace_save_button)
+        cancel=view.findViewById(R.id.editmyplace_cancel_button)
+        latitude=view.findViewById(R.id.editmyplace_latitude_edit)
+        longitude=view.findViewById(R.id.editmyplace_longitude_edit)
 
 
-    override fun onCreate(savedInstanceState: Bundle?){
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
+
+        val lonObserver= Observer<String>{newValue->
+            longitude.setText(newValue.toString())
+            sharedViewModel.longitude=longitude.text.toString()
 
 
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val editName: EditText = requireView().findViewById<EditText>(R.id.editmyplace_name_edit)
-        val editDesc: EditText = requireView().findViewById<EditText>(R.id.editmyplace_desc_edit)
-        val editLongitude: EditText = requireView().findViewById<EditText>(R.id.editmyplace_longitude_edit)
-        val lonObserver = Observer<String> {newValue ->
-            editLongitude.setText(newValue.toString())
         }
-        locationViewModel.longitude.observe(viewLifecycleOwner, lonObserver)
-        val editLatitude: EditText = requireView().findViewById<EditText>(R.id.editmyplace_latitude_edit)
-        val latObserver = Observer<String> {newValue ->
-            editLatitude.setText(newValue.toString())
-        }
-        locationViewModel.latitude.observe(viewLifecycleOwner,  latObserver)
-        if (myPlacesViewModel.selected!=null){
-            editName.setText(myPlacesViewModel.selected?.name)
-            editDesc.setText(myPlacesViewModel.selected?.description)
-        }
-        val addButton: Button = requireView().findViewById<Button>(R.id.editmyplace_finished_button)
-        addButton.isEnabled = false
-        if (myPlacesViewModel.selected!=null){
-            addButton.setText(R.string.editmyplace_save_label)
-        }
-        editName.addTextChangedListener(object : TextWatcher{
-            override fun afterTextChanged(p0: Editable?) {
-                addButton.isEnabled=(editName.text.length>0)
-            }
+        locationViewModel.longitude.observe(viewLifecycleOwner,lonObserver)
+        val latiObserver= Observer<String>{newValue->
+            latitude.setText(newValue.toString())
+            sharedViewModel.latitude=latitude.text.toString()
 
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
+        }
+        locationViewModel.latitude.observe(viewLifecycleOwner,latiObserver)
+        set=view.findViewById(R.id.editmyplace_location_button)
+        set.setOnClickListener{
+            locationViewModel.addObject=true
+            locationViewModel.viewObject=false
+            locationViewModel.oneObject=false
 
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-        })
-        addButton.setOnClickListener{
-            val name: String = editName.text.toString()
-            val desc: String = editDesc.text.toString()
-            val longitude: String = editLongitude.text.toString()
-            val latitude: String = editLatitude.text.toString()
-            if(myPlacesViewModel.selected!=null){
-                myPlacesViewModel.selected?.name = name
-                myPlacesViewModel.selected?.description = desc
-                myPlacesViewModel.selected?.longitude = longitude
-                myPlacesViewModel.selected?.latitude = latitude
-            }
-            else
-                myPlacesViewModel.addPlace(MyPlaces(name, desc, longitude, latitude))
-            myPlacesViewModel.selected = null
-            locationViewModel.setLocation("", "")
-            findNavController().popBackStack()
-        }
-        val cancelButton: Button = requireView().findViewById<Button>(R.id.editmyplace_cancel_button)
-        cancelButton.setOnClickListener{
-            myPlacesViewModel.selected = null
-            locationViewModel.setLocation("", "")
-            findNavController().popBackStack()
-        }
-        val setButton: Button = requireView().findViewById<Button>(R.id.editmyplace_location_button)
-        setButton.setOnClickListener{
-            locationViewModel.setLocation = true
             findNavController().navigate(R.id.action_EditFragment_to_MapFragment)
+
+        }
+        ///////////////////////////////////////////////////////////////////////////////
+        save.setOnClickListener {
+            if(sharedViewModel.lastLatitude==latitude.text.toString()&&sharedViewModel.lastLongitude==longitude.text.toString())
+            {
+                Toast.makeText(context,"Object already added on this location",Toast.LENGTH_SHORT).show()
+            }
+            else {
+
+                val namePom = placeName.text.toString()
+                var descPom = description.text.toString()
+                val gradePom = grade.text.toString()
+                if ((namePom.isNotEmpty() && gradePom.isNotEmpty() && gradePom.toInt() >= 5 && gradePom.toInt() <= 10) || (namePom.isNotEmpty() && gradePom.isNotEmpty() && gradePom.toInt() < 5 && gradePom.toInt() >= 1 && descPom.isNotEmpty())) {
+                    var instance = Calendar.getInstance()
+                    var month = instance.get(Calendar.MONTH).toInt() + 1
+                    var date = instance.get(Calendar.DAY_OF_MONTH)
+                        .toString() + "." + month.toString() + "." + instance.get(Calendar.YEAR)
+                    var time = instance.get(Calendar.HOUR_OF_DAY).toString() + ":" + instance.get(
+                        Calendar.MINUTE
+                    )
+                    var datumVreme = date + " at " + time
+                    progress.visibility = View.VISIBLE
+                    if (description.text.toString().isEmpty()) {
+                        descPom = ""
+                    }
+
+
+                    val key = placeName.text.toString().replace(".", "").replace("#", "")
+                        .replace("$", "").replace("[", "").replace("]", "")
+
+                    DataBase.databasePlaces.child(key).setValue(place)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                sharedViewModel.lastLatitude = latitude.text.toString()
+                                sharedViewModel.lastLongitude = longitude.text.toString()
+                                progress.visibility = View.GONE
+                                Toast.makeText(
+                                    context,
+                                    "Place added ${placeName.text.toString()}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                placeName.text.clear()
+                                description.text.clear()
+                                grade.text.clear()
+                                longitude.setText("")
+                                latitude.setText("")
+                                picture.visibility = View.GONE
+                                DataBase.databaseUsers.child(
+                                    sharedViewModel.name.replace(".", "").replace("#", "")
+                                        .replace("$", "").replace("[", "").replace("]", "")
+                                ).get().addOnSuccessListener { snapshot ->
+                                    if (snapshot.exists()) {
+                                        sharedViewModel.user = UserData(
+                                            snapshot.child("username").value.toString(),
+                                            snapshot.child("password").value.toString(),
+                                            snapshot.child("firstName").value.toString(),
+                                            snapshot.child("lastName").value.toString(),
+                                            snapshot.child("phoneNumber").value.toString(),
+                                            snapshot.child("imageUrl").value.toString(),
+                                            ArrayList(),
+                                            snapshot.child("points").value.toString().toIntOrNull()
+                                        )
+                                        sharedViewModel.user.points =
+                                            sharedViewModel.user.points?.plus(10)
+                                        DataBase.databaseUsers.child(
+                                            sharedViewModel.name.replace(".", "").replace("#", "")
+                                                .replace("$", "").replace("[", "").replace("]", "")
+                                        ).setValue(sharedViewModel.user).addOnSuccessListener {
+
+                                            Toast.makeText(
+                                                context,
+                                                "Dobili ste jos 10 bodova",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }.addOnFailureListener {
+                                            Toast.makeText(context, "Greska", Toast.LENGTH_LONG)
+                                                .show()
+                                        }
+                                    }
+
+                                }.addOnFailureListener {
+                                    Toast.makeText(context, "Greska", Toast.LENGTH_LONG).show()
+                                }
+
+                            } else {
+                                Toast.makeText(context, "Greska", Toast.LENGTH_LONG).show()
+                            }
+
+
+                        }
+
+                } else {
+
+                    Toast.makeText(
+                        context,
+                        "All fields required, comment is neccessary for grades less than 6. Grades must be in range 1 - 10",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+
+        }
+        cancel.setOnClickListener{
+            findNavController().navigate(R.id.action_EditFragment_to_HomeFragment)
+        }
+        var openCameraButton:Button=view.findViewById(R.id.buttonCamera)
+        openCameraButton.setOnClickListener{
+            if (checkCameraPermission()) {
+                val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                if (takePictureIntent.resolveActivity(requireActivity().packageManager) != null) {
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+                }
+            } else {
+                // Ako dozvola nije odobrena, zahtevajte je
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(Manifest.permission.CAMERA),
+                    CAMERA_PERMISSION_REQUEST_CODE
+                )
+            }
+        }
+        var openGalleryButton:Button=view.findViewById(R.id.buttonGallery)
+
+        openGalleryButton.setOnClickListener{
+            if (checkGalleryPermission()) {
+                val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                if(galleryIntent.resolveActivity(requireActivity().packageManager)!=null) {
+                    startActivityForResult(galleryIntent, GALLERY_PERMISSION_REQUEST_CODE)
+                }
+            } else {
+                // Ako dozvola nije odobrena, zahtevajte je
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    GALLERY_PERMISSION_REQUEST_CODE
+                )
+            }
+        }
+
+
+
+        return view
+    }
+    private fun checkCameraPermission() : Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+    private fun checkGalleryPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            val imageBitmap = data?.extras?.get("data") as Bitmap
+            //ZA SETOVANJE IMAGE VIEW-A
+            picture.setImageBitmap(imageBitmap)
+            posaljiSlikuUFireStoragePreuzmiURLiPosaljiURealtimeDatabase(imageBitmap)
+        }
+        if (requestCode == GALLERY_PERMISSION_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+            // Ovde obrada rezultata odabira slike iz galerije
+            val selectedImageUri: Uri? = data.data
+            if (selectedImageUri != null) {
+                // Očitavanje slike iz URI i postavljanje u ImageView
+                val imageBitmap = MediaStore.Images.Media.getBitmap(
+                    requireContext().contentResolver,
+                    selectedImageUri
+                )
+                picture.setImageBitmap(imageBitmap)
+
+                // Otpremanje slike na Firebase Storage
+                posaljiSlikuUFireStoragePreuzmiURLiPosaljiURealtimeDatabase(imageBitmap)
+
+            }
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    private fun posaljiSlikuUFireStoragePreuzmiURLiPosaljiURealtimeDatabase(imageBitmap:Bitmap)
+    {
+        val imagesRef = DataBase.storageRef.child("images/${System.currentTimeMillis()}.jpg")
+        picture.visibility=View.GONE
+        pictureWait.visibility=View.VISIBLE
+        // Convert the bitmap to bytes
+        val baos = ByteArrayOutputStream()
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val imageData = baos.toByteArray()
+
+        // Upload the image to Firebase Storage
+        val uploadTask = imagesRef.putBytes(imageData)
+        uploadTask.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // Image upload success
+                // Now you can get the download URL of the image and save it to the database
+                imagesRef.downloadUrl.addOnSuccessListener { uri ->
+                    // Save the URI to the database or use it as needed
+                    imgUrl = uri.toString()
+                    picture.visibility=View.GONE
+                    picture.visibility=View.VISIBLE
+                    Toast.makeText(context,"Picture saved",Toast.LENGTH_SHORT).show()
+                    // Add the code to save the URL to the user's data in Firebase Database here
+                }.addOnFailureListener { exception ->
+                    // Handle any errors that may occur while retrieving the download URL
+                    Toast.makeText(
+                        requireContext(),
+                        "Failed to get download URL.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } else {
+                // Image upload failed
+                val errorMessage = task.exception?.message
+                Toast.makeText(
+                    requireContext(),
+                    "Image upload failed. Error: $errorMessage",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
+
 }

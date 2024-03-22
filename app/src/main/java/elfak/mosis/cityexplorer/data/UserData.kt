@@ -7,6 +7,6 @@ data class UserData(
     val firstName: String? = null,
     val lastName: String? = null,
     val imageUrl: String? = null,
-    var mesta:ArrayList<MyPlaces> =ArrayList(),
-    var bodovi:Int?=0
+    var places:ArrayList<MyPlaces> =ArrayList(),
+    var points:Int?=0
 )

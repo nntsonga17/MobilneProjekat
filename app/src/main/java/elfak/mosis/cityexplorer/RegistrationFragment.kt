@@ -1,6 +1,11 @@
 package elfak.mosis.cityexplorer
 
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,15 +17,23 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import android.Manifest
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import elfak.mosis.cityexplorer.R.layout.fragment_registration
 import elfak.mosis.cityexplorer.data.UserData
 import elfak.mosis.cityexplorer.databinding.FragmentRegistrationBinding
 import elfak.mosis.cityexplorer.model.UserViewModel
+import java.io.ByteArrayOutputStream
+
 
 
 class RegistrationFragment : Fragment() {
@@ -35,6 +48,7 @@ class RegistrationFragment : Fragment() {
     lateinit var editTextPhoneNumber: EditText
     lateinit var progress: ProgressBar
     lateinit var database: DatabaseReference
+    private lateinit var storageRef: StorageReference
     lateinit var imgUrl: String
     private val REQUEST_IMAGE_CAPTURE = 1
     lateinit var user: UserData
@@ -59,16 +73,37 @@ class RegistrationFragment : Fragment() {
         editTextPhoneNumber = view.findViewById(R.id.phoneNumber)
         editTextFirstName = view.findViewById(R.id.firstName)
         editTextLastName = view.findViewById(R.id.lastName)
+        progress = view.findViewById(R.id.progressBar1)
+        openCameraButton = view.findViewById(R.id.buttonPhoto)
+        imageView = view.findViewById(R.id.imageView6)
+        storageRef = FirebaseStorage.getInstance().reference
+        pictureReg = view.findViewById(R.id.PictureReg)
 
 
 
         auth = FirebaseAuth.getInstance()
+
+        openCameraButton.setOnClickListener{
+            if (checkCameraPermission()) {
+                val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                if (takePictureIntent.resolveActivity(requireActivity().packageManager) != null) {
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+                }
+            } else {
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(Manifest.permission.CAMERA),
+                    CAMERA_PERMISSION_REQUEST_CODE
+                )
+            }
+        }
 
         textView.setOnClickListener {
             findNavController().navigate(R.id.action_RegistrationFragment_to_LoginFragment)
         }
 
         buttonReg.setOnClickListener {
+            progress.visibility = View.VISIBLE
             val username = editTextUsername.text.toString()
             val password = editTextPassword.text.toString()
             val phoneNumber = editTextPhoneNumber.text.toString()
@@ -86,6 +121,18 @@ class RegistrationFragment : Fragment() {
             auth.createUserWithEmailAndPassword(username, password)
                 .addOnCompleteListener(requireActivity()) { task ->
                     if (task.isSuccessful) {
+                        progress.visibility = View.GONE
+                        database= FirebaseDatabase.getInstance().getReference("Users")
+                        user = UserData(username, password, phoneNumber, firstName, lastName, sharedViewModel.imageUrl, ArrayList(), 0 )
+                        val key = username.replace(".", " ").replace("#","").replace("$", "").replace("[", "").replace("]", "")
+                        database.child(key).setValue(user).addOnSuccessListener {
+                            sharedViewModel.name = username
+                            editTextUsername.text.clear()
+                            editTextFirstName.text.clear()
+                            editTextLastName.text.clear()
+                            editTextPassword.text.clear()
+                            editTextPhoneNumber.text.clear()
+                        }
                         // Ako je kreiranje korisnika uspešno, možemo automatski navigirati korisnika na LoginFragment
                         findNavController().navigate(R.id.action_RegistrationFragment_to_LoginFragment)
 
@@ -100,4 +147,47 @@ class RegistrationFragment : Fragment() {
 
         return view
     }
-}
+    private fun checkCameraPermission() : Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            val imageBitmap = data?.extras?.get("data") as Bitmap
+            imageView.setImageBitmap(imageBitmap)
+            // Create a reference to the image file in Firebase Storage
+            val imagesRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
+            imageView.visibility=View.GONE
+            pictureReg.visibility=View.VISIBLE
+            // Convert the bitmap to bytes
+            val baos = ByteArrayOutputStream()
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+            val imageData = baos.toByteArray()
+
+            // Upload the image to Firebase Storage
+            val uploadTask = imagesRef.putBytes(imageData)
+            uploadTask.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Image upload success
+                    // Now you can get the download URL of the image and save it to the database
+                    imagesRef.downloadUrl.addOnSuccessListener { uri ->
+                        // Save the URI to the database or use it as needed
+                        imgUrl = uri.toString()
+                        sharedViewModel.imageUrl=imgUrl
+                        pictureReg.visibility=View.GONE
+                        imageView.visibility=View.VISIBLE
+                        // Add the code to save the URL to the user's data in Firebase Database here
+                    }.addOnFailureListener { exception ->
+                        // Handle any errors that may occur while retrieving the download URL
+                        Toast.makeText(requireContext(), "Failed to get download URL.", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    // Image upload failed
+                    val errorMessage = task.exception?.message
+                    Toast.makeText(requireContext(), "Image upload failed. Error: $errorMessage", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+}}
