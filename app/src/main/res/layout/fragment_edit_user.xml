@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EditFragment">
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageViewU3"
+            android:layout_width="match_parent"
+            android:layout_height="168dp"
+            android:src="@drawable/elfak" />
+
+
+        <TextView
+            android:id="@+id/textViewU10"
+            style="@style/Theme.CityExplorer"
+            android:layout_width="match_parent"
+            android:layout_height="79dp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/app_name"
+            android:textAlignment="center"
+
+            android:textSize="48sp" />
+
+        <TextView
+            android:id="@+id/textViewU3"
+            android:layout_width="match_parent"
+            android:layout_height="66dp"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"
+            android:text="Account Details "
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+
+        <EditText
+            android:id="@+id/editTextMailU"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:enabled="false"
+            android:gravity="center"
+            android:inputType="text"
+            android:textSize="25sp" />
+        <EditText
+            android:id="@+id/editTextFNameU"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Enter Firstname"
+            android:inputType="text"
+            android:textSize="25sp" />
+
+        <EditText
+            android:id="@+id/editTextLNameU"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Enter Lastname"
+            android:inputType="text"
+            android:textSize="25sp" />
+
+        <EditText
+            android:id="@+id/editTextPhoneNumU"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Enter phone number"
+            android:inputType="phone"
+            android:textSize="25sp" />
+
+        <EditText
+            android:id="@+id/editTextOldPassU"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Enter current password"
+            android:inputType="textPassword"
+            android:textSize="25sp" />
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Do you want to change password?" />
+        <EditText
+            android:id="@+id/editTextPass1"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Enter new password"
+            android:inputType="textPassword"
+            android:textSize="25sp" />
+        <EditText
+            android:id="@+id/editTextPass2"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Enter new password"
+            android:inputType="textPassword"
+            android:textSize="25sp" />
+
+
+
+
+        <ImageView
+            android:id="@+id/imageView6U"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/picprogress"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/buttonPhotoU"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Open camera"
+            android:layout_marginBottom="16dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar1U"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonRegU"
+                android:layout_width="185dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="49dp"
+                android:text="Update" />
+
+            <Button
+                android:id="@+id/buttonBackU"
+                android:layout_width="179dp"
+                android:layout_height="wrap_content"
+                android:text="Back" />
+
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

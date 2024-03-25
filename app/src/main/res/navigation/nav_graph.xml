@@ -24,6 +24,13 @@
         <action
             android:id="@+id/action_HomeFragment_to_LoginFragment"
             app:destination="@+id/LoginFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_EditUserFragment"
+            app:destination="@+id/EditUserFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_InfoFragment"
+            app:destination="@+id/InfoFragment" />
+
 
     </fragment>
     <fragment
@@ -85,7 +92,7 @@
             app:destination="@+id/HomeFragment" />
     </fragment>
     <fragment
-        android:id="@+id/RegisterFragment"
+        android:id="@+id/RegistrationFragment"
         android:name="elfak.mosis.cityexplorer.RegistrationFragment"
         android:label="@string/register"
         tools:layout="@layout/fragment_registration">
@@ -93,4 +100,23 @@
             android:id="@+id/action_RegistrationFragment_to_LoginFragment"
             app:destination="@+id/LoginFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/EditUserFragment"
+        android:name="elfak.mosis.cityexplorer.EditUserFragment"
+        android:label="@string/register"
+        tools:layout="@layout/fragment_edit_user">
+        <action
+            android:id="@+id/action_EditUserFragment_to_HomeFragment"
+            app:destination="@+id/HomeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/InfoFragment"
+        android:name="elfak.mosis.cityexplorer.InfoFragment"
+        android:label="Info"
+        tools:layout="@layout/fragment_view">
+        <action
+            android:id="@+id/action_ViewFragment_to_ListFragment"
+            app:destination="@+id/ListFragment"/>
+    </fragment>
+
 </navigation>

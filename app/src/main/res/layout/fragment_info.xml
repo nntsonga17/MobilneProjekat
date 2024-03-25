@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".InfoFragment"
+    android:orientation="vertical"
+    android:gravity="center">
+
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="match_parent"
+        android:layout_height="142dp"
+        android:src="@drawable/elfak" />
+
+
+    <TextView
+        android:id="@+id/textView10"
+        style="@style/Theme.CityExplorer"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/app_name"
+        android:textAlignment="center"
+
+        android:textSize="48sp" />
+
+
+    <ImageView
+        android:id="@+id/picInfo"
+        android:layout_width="295dp"
+        android:layout_height="127dp"
+        tools:src="@drawable/next" />
+
+    <TextView
+        android:id="@+id/infoUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        tools:text="nameandlastname@gmail.com" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="95dp"
+            android:layout_height="133dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textAlignment="center"
+                android:textSize="25sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/infoName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+
+                android:textSize="25sp"
+                android:textStyle="bold"
+                tools:text="Nikola" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="108dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="LName"
+
+                android:textAlignment="center"
+                android:textSize="25sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/infoLastname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:textAlignment="center"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                tools:text="Nikolic" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="172dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Phone number"
+
+                android:textAlignment="center"
+                android:textSize="25sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/infoPhonenumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:textAlignment="center"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                tools:text="0628964462" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Points"
+        android:textSize="25sp"
+        android:textStyle="normal"/>
+
+    <TextView
+        android:id="@+id/infoPoints"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="90"
+        android:textStyle="bold"
+        android:textSize="30sp"/>
+
+</LinearLayout>
