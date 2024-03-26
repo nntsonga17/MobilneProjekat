@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CommentPlaceFragment">
+
+    <LinearLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:id="@+id/imageViewR3"
+            android:layout_width="match_parent"
+            android:layout_height="168dp"
+            android:src="@drawable/elfak" />
+
+        <TextView
+            android:id="@+id/textViewR10"
+            style="@style/Theme.CityExplorer"
+            android:layout_width="match_parent"
+            android:layout_height="79dp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/app_name"
+            android:textAlignment="center"
+
+            android:textSize="48sp" />
+
+        <TextView
+            android:id="@+id/textViewR3"
+            android:layout_width="match_parent"
+            android:layout_height="234dp"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"
+            android:text="All comments about selected place"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+</ScrollView>

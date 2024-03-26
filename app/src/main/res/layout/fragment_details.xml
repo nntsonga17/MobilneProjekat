@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:textAlignment="center"
+    tools:context=".DetailsFragment">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/editTextPlaceNameU"
+            android:layout_width="match_parent"
+            android:layout_height="41dp"
+            android:ems="10"
+            android:hint="Place name"
+            android:inputType="text"
+            android:textAlignment="center"
+            android:textSize="30sp" />
+
+        <ImageView
+            android:id="@+id/objectPicture"
+            android:layout_width="match_parent"
+            android:layout_height="99dp" />
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/picBar"
+            android:visibility="gone"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Type"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/editTextTypeU"
+                android:layout_width="310dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center" />
+        </LinearLayout>
+
+
+
+        <EditText
+            android:id="@+id/editTextCommentU"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="start"
+            android:hint="Comment a place"
+            android:inputType="textMultiLine"
+            android:textAlignment="textStart" />
+
+        <EditText
+            android:id="@+id/editTextGradeU"
+            android:layout_width="match_parent"
+            android:layout_height="71dp"
+            android:ems="10"
+            android:hint="Add grade"
+            android:inputType="number" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Place coordinates:"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/oldLatitude"
+                android:layout_width="106dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:enabled="false"
+                android:textSize="25sp"
+                tools:text="Latitude" />
+
+            <TextView
+                android:id="@+id/oldLongitude"
+                android:layout_width="123dp"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:textSize="25sp"
+                tools:text="longitude" />
+        </LinearLayout>
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressPlaceU"
+            android:visibility="gone"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="New coordinates"
+            android:textAlignment="center"
+            android:textSize="25sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="107dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/Latitude"
+                android:layout_width="106dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:textSize="25sp"
+                tools:text="Latitude"
+                android:enabled="false"/>
+
+            <EditText
+                android:id="@+id/Longitude"
+                android:layout_width="123dp"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                tools:text="longitude"
+                android:enabled="false"/>
+
+            <Button
+                android:id="@+id/buttonSetU"
+                android:layout_width="wrap_content"
+                android:layout_height="107dp"
+                android:text="Set object on map"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="69dp">
+
+            <Button
+                android:id="@+id/buttonAddUsingCameraU"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="35dp"
+                android:text="Open camera" />
+
+            <Button
+                android:id="@+id/buttonAddUsingGaleryU"
+                android:layout_width="217dp"
+                android:layout_height="wrap_content"
+                android:text="Open galery" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonAddPlaceU"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:text="Update place" />
+
+            <Button
+                android:id="@+id/buttonDeleteU"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_weight="1"
+                android:text="Delete place" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/commentMyPlace"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:text="See comments about a place" />
+
+        <Button
+            android:id="@+id/buttonBackU"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Back" />
+
+
+
+    </LinearLayout>
+</ScrollView>

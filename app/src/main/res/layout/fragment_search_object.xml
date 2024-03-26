@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".SearchObjectFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/pretrazi"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/FilterPlaceName"
+                android:layout_width="133dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Place name"
+                android:inputType="text"
+                android:textAlignment="center" />
+
+            <EditText
+                android:id="@+id/FilterAuthor"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Author"
+                android:inputType="text"
+                android:textAlignment="center" />
+
+            <EditText
+                android:id="@+id/FilterRadius"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Radius(m)"
+                android:inputType="number"
+                android:textAlignment="textStart"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Enter latitude"
+                android:id="@+id/filterLatitude"/>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Enter longitude"
+                android:id="@+id/filterLongitude"/>
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Teren"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/FilterType"
+                android:layout_width="310dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center" />
+        </LinearLayout>
+
+
+
+        <EditText
+            android:id="@+id/FilterComment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="start"
+            android:hint="Comment"
+            android:inputType="textMultiLine"
+            android:textAlignment="textStart" />
+
+        <EditText
+            android:id="@+id/FilterGrade"
+            android:layout_width="match_parent"
+            android:layout_height="61dp"
+            android:ems="10"
+            android:hint="Grade"
+            android:inputType="number" />
+        <EditText
+            android:id="@+id/FilterDate"
+            android:layout_width="match_parent"
+            android:layout_height="61dp"
+            android:ems="10"
+            android:hint="Place marking date"
+            android:inputType="text" />
+        <EditText
+            android:id="@+id/FilterDateI"
+            android:layout_width="match_parent"
+            android:layout_height="61dp"
+            android:ems="10"
+            android:hint="Last interaction date"
+            android:inputType="text" />
+        <Button
+            android:id="@+id/buttonFilterSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Search" />
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingBottom="5dp"
+                    android:id="@+id/tableFilter"
+                    >
+
+                    <TableRow
+                        android:background="#51B435"
+                        android:padding="10dp"
+                        android:textAlignment="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="30dp"
+                            android:text="Place name"
+                            android:textAlignment="center"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="30dp"
+                            android:text="Author"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            android:textAlignment="center"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="30dp"
+                            android:text="Description"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            android:textAlignment="center"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="30dp"
+                            android:text="Grade"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            android:textAlignment="center"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="30dp"
+                            android:text="Latitude"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="30dp"
+                            android:text="Longitude"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            android:textAlignment="center"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="30dp"
+                            android:text="Type"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            android:textAlignment="center"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="30dp"
+                            android:text="Adding place date"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            android:textAlignment="center"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="30dp"
+                            android:text="Last comment date"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            android:textAlignment="center"
+                            />
+
+                    </TableRow>
+
+                </TableLayout>
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <org.osmdroid.views.MapView
+            android:id="@+id/map2"
+            tilesource="Mapnik"
+            android:layout_width="785dp"
+            android:layout_height="865dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </LinearLayout>
+
+
+</ScrollView>

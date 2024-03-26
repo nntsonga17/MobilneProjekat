@@ -91,7 +91,7 @@ class UserViewModel : ViewModel() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e(ContentValues.TAG,"Greska prilikom preuzimanja korisnika sa baze ${error.message}")
+                Log.e(ContentValues.TAG,"Error loading user from database ${error.message}")
             }
         })
         //SVA MESTA UZMI IZ BAZE
@@ -163,7 +163,7 @@ class UserViewModel : ViewModel() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e(ContentValues.TAG,"Greska prilikom preuzimanja korisnika sa baze ${error.message}")
+                Log.e(ContentValues.TAG,"Error while loading user from database ${error.message}")
             }
         })
     }

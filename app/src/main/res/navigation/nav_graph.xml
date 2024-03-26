@@ -103,7 +103,7 @@
     <fragment
         android:id="@+id/EditUserFragment"
         android:name="elfak.mosis.cityexplorer.EditUserFragment"
-        android:label="@string/register"
+        android:label="Edit User"
         tools:layout="@layout/fragment_edit_user">
         <action
             android:id="@+id/action_EditUserFragment_to_HomeFragment"
@@ -118,5 +118,72 @@
             android:id="@+id/action_ViewFragment_to_ListFragment"
             app:destination="@+id/ListFragment"/>
     </fragment>
+    <fragment
+        android:id="@+id/CommentGradeFragment"
+        android:name="elfak.mosis.cityexplorer.CommentGradeFragment"
+        android:label="Comment Grade"
+        tools:layout="@layout/fragment_comment_grade"
+        tools:ignore="ExtraText">
+
+    <action
+        android:id="@+id/action_CommentGradeFragment_to_MapFragment"
+        app:destination="@+id/MapFragment" />
+    <action
+        android:id="@+id/action_CommentGradeFragment_to_HomeFragment"
+        app:destination="@+id/HomeFragment" />
+    <action
+        android:id="@+id/action_CommentGradeFragment_to_CommentPlaceFragment"
+        app:destination="@+id/CommentPlaceFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/CommentPlaceFragment"
+        android:name="elfak.mosis.cityexplorer.CommentPlaceFragment"
+        android:label="Comment Place"
+        tools:layout="@layout/fragment_comment_place"
+        tools:ignore="ExtraText">
+    </fragment>
+    <fragment
+        android:id="@+id/MyPlacesFragment"
+        android:name="elfak.mosis.cityexplorer.MyPlacesFragment"
+        android:label="My Places"
+        tools:layout="@layout/fragment_my_places"
+        tools:ignore = "ExtraText">
+        <action
+            android:id="@+id/action_MyPlacesFragment_to_DetailsFragment"
+            app:destination="@+id/DetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/DetailsFragment"
+        android:name="elfak.mosis.cityexplorer.DetailsFragment"
+        android:label="Details"
+        tools:layout="@layout/fragment_details"
+        tools:ignore = "ExtraText">
+        <action
+            android:id="@+id/action_DetailsFragment_to_MapFragment"
+            app:destination="@+id/MapFragment" />
+        <action
+            android:id="@+id/action_DetailsFragment_to_CommentPlaceFragment"
+            app:destination="@+id/CommentPlaceFragment" />
+        <action
+            android:id="@+id/action_DetailsFragment_to_MyPlacesFragment"
+            app:destination="@+id/MyPlacesFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/SearchObjectFragment"
+        android:name="elfak.mosis.cityexplorer.SearchObjectFragment"
+        android:label="Search"
+        tools:layout="@layout/fragment_search_object"
+        tools:ignore = "ExtraText">
+        <action
+            android:id="@+id/action_SearchObjectFragment_to_DetailsFragment"
+            app:destination="@+id/DetailsFragment" />
+        <action
+            android:id="@+id/action_SearchObjectFragment_to_CommentGradeFragment"
+            app:destination="@+id/CommentGradeFragment" />
+
+    </fragment>
+
 
 </navigation>

@@ -182,21 +182,21 @@ class EditFragment : Fragment() {
 
                                             Toast.makeText(
                                                 context,
-                                                "Dobili ste jos 10 bodova",
+                                                "You earned 10 points",
                                                 Toast.LENGTH_SHORT
                                             ).show()
                                         }.addOnFailureListener {
-                                            Toast.makeText(context, "Greska", Toast.LENGTH_LONG)
+                                            Toast.makeText(context, "Error", Toast.LENGTH_LONG)
                                                 .show()
                                         }
                                     }
 
                                 }.addOnFailureListener {
-                                    Toast.makeText(context, "Greska", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(context, "Error", Toast.LENGTH_LONG).show()
                                 }
 
                             } else {
-                                Toast.makeText(context, "Greska", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, "Error", Toast.LENGTH_LONG).show()
                             }
 
 
@@ -272,7 +272,7 @@ class EditFragment : Fragment() {
             val imageBitmap = data?.extras?.get("data") as Bitmap
             //ZA SETOVANJE IMAGE VIEW-A
             picture.setImageBitmap(imageBitmap)
-            posaljiSlikuUFireStoragePreuzmiURLiPosaljiURealtimeDatabase(imageBitmap)
+            sendPicutreToFirestorageDownloadURLSendToRealtimeDatabase(imageBitmap)
         }
         if (requestCode == GALLERY_PERMISSION_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
             // Ovde obrada rezultata odabira slike iz galerije
@@ -286,13 +286,13 @@ class EditFragment : Fragment() {
                 picture.setImageBitmap(imageBitmap)
 
                 // Otpremanje slike na Firebase Storage
-                posaljiSlikuUFireStoragePreuzmiURLiPosaljiURealtimeDatabase(imageBitmap)
+                sendPicutreToFirestorageDownloadURLSendToRealtimeDatabase(imageBitmap)
 
             }
         }
     }
 
-    private fun posaljiSlikuUFireStoragePreuzmiURLiPosaljiURealtimeDatabase(imageBitmap:Bitmap)
+    private fun sendPicutreToFirestorageDownloadURLSendToRealtimeDatabase(imageBitmap:Bitmap)
     {
         val imagesRef = DataBase.storageRef.child("images/${System.currentTimeMillis()}.jpg")
         picture.visibility=View.GONE

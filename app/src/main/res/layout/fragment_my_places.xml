@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MyPlacesFragment"
+    android:orientation="vertical"
+    android:gravity="center">
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="137dp"
+        android:src="@drawable/elfak" />
+
+    <TextView
+        android:id="@+id/textView"
+        style="@style/Theme.CityExplorer"
+        android:layout_width="match_parent"
+        android:layout_height="133dp"
+        android:text="List of your favourite places"
+        android:textAlignment="center"
+        android:textSize="34sp"/>
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/loadMyPlaces"/>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/placesView"/>
+
+
+</LinearLayout>

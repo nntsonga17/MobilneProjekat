@@ -1,14 +1,209 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".CommentGradeFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
 
-</FrameLayout>
+
+        <ImageView
+            android:id="@+id/imageViewR3"
+            android:layout_width="match_parent"
+            android:layout_height="168dp"
+            android:src="@drawable/elfak" />
+
+        <TextView
+            android:id="@+id/textViewR10"
+            style="@style/Theme.CityExplorer"
+            android:layout_width="match_parent"
+            android:layout_height="79dp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/app_name"
+            android:textAlignment="center"
+
+            android:textSize="48sp" />
+
+        <TextView
+            android:id="@+id/textViewR3"
+            android:layout_width="match_parent"
+            android:layout_height="126dp"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"
+            android:text="Find place on the map and comment it"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/buttonOpenMap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Find place near me" />
+
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Place info"
+            android:id="@+id/buttonInfo"
+            android:enabled="false"/>
+
+        <TextView
+            android:id="@+id/commentName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="35sp"
+            android:textStyle="bold"
+            tools:text="Name " />
+
+        <ImageView
+            android:id="@+id/commentPic"
+            android:layout_width="match_parent"
+            android:layout_height="108dp" />
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/picProgress"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/TextType"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Type: "
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/commentType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                tools:text="Restaurant" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/TextGrade"
+                android:layout_width="91dp"
+                android:layout_height="wrap_content"
+                android:text="Grade: "
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/commentGradeB"
+                android:layout_width="36dp"
+                android:layout_height="match_parent"
+                android:textSize="25sp"
+                tools:text="9" />
+
+            <TextView
+                android:id="@+id/TextAuthor"
+                android:layout_width="73dp"
+                android:layout_height="match_parent"
+                android:text="Author:"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/commentAuthor"
+                android:layout_width="153dp"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                tools:text="Some name" />
+
+        </LinearLayout>
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/commentProgress"
+            android:visibility="gone"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/commentLatitude"
+                android:layout_width="149dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="45dp"
+                android:text="Latitude"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/commentLongitude"
+                android:layout_width="168dp"
+                android:layout_height="match_parent"
+                android:text="Longitude"
+                android:textSize="25sp" />
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/commentGrade"
+            android:layout_width="match_parent"
+            android:layout_height="63dp"
+            android:ems="10"
+            android:hint="Enter grade 1-10"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:textSize="25sp" />
+
+        <EditText
+            android:id="@+id/editComment"
+            android:layout_width="match_parent"
+            android:layout_height="298dp"
+            android:ems="10"
+            android:gravity="start|top"
+            android:hint="Comment"
+            android:inputType="textMultiLine"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="69dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/commentSend"
+                android:layout_width="wrap_content"
+                android:layout_height="69dp"
+                android:layout_marginRight="15dp"
+                android:text="Send comment" />
+
+            <Button
+                android:id="@+id/commentBack"
+                android:layout_width="181dp"
+                android:layout_height="match_parent"
+                android:text="Back" />
+        </LinearLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonAllComments"
+            android:text="See all comments about a place"/>
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/writeCommentsPB"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+</ScrollView>

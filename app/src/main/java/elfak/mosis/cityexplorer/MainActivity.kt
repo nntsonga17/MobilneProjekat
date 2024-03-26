@@ -1,93 +1,90 @@
 package elfak.mosis.cityexplorer
 
-import android.content.Intent
-import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.Button
-import android.widget.MediaController
-import android.widget.TextView
-import android.widget.Toast
+import android.os.Bundle
+import android.os.Looper
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
+import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
-import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import elfak.mosis.cityexplorer.databinding.ActivityMainBinding
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupActionBarWithNavController
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import elfak.mosis.cityexplorer.model.LocationViewModel
+import org.osmdroid.util.GeoPoint
+
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
-    private lateinit var auth: FirebaseAuth
-    private lateinit var logoutButton: Button
-
-
-
-
+    private val locationViewModel: LocationViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        setSupportActionBar(binding.toolbar)
-
-        auth = FirebaseAuth.getInstance()
-
-
-
-
-        navController = findNavController(R.id.nav_host_fragment_content_main)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
-
-        navController.addOnDestinationChangedListener{controller, destination, arguments ->
-            if (destination.id == R.id.EditFragment || destination.id == R.id.ViewFragment)
-                binding.fab.hide()
-            else
-                binding.fab.show()
-        }
-
-        binding.fab.setOnClickListener { view ->
-            if (navController.currentDestination?.id == R.id.HomeFragment)
-                navController.navigate(R.id.action_HomeFragment_to_EditFragment)
-            else if(navController.currentDestination?.id == R.id.ListFragment)
-                navController.navigate(R.id.action_ListFragment_to_EditFragment)
-            else if(navController.currentDestination?.id == R.id.MapFragment)
-                navController.navigate(R.id.action_MapFragment_to_EditFragment)
-        }
+        setContentView(R.layout.activity_main)
+        val navHostFragment=supportFragmentManager.findFragmentById(R.id.fragment) as NavHostFragment
+        navController=navHostFragment.navController;
+        setupActionBarWithNavController(navController)
+        followUserLocation()
 
     }
+    private fun followUserLocation() {
 
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        when (item.itemId) {
-            R.id.action_show_map -> {
-                if(navController.currentDestination?.id == R.id.HomeFragment)
-                    navController.navigate(R.id.action_HomeFragment_to_MapFragment)
-                else if(navController.currentDestination?.id == R.id.ListFragment)
-                    navController.navigate(R.id.action_ListFragment_to_MapFragment)
-            }
-            R.id.action_about -> {
-                val i: Intent = Intent(this, About::class.java)
-                startActivity(i)
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        val locationRequest = LocationRequest()
+        locationRequest.interval = 60000
+        locationRequest.fastestInterval = 60000
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+
+        val locationCallback = object : LocationCallback() {
+            override fun onLocationResult(p0: LocationResult) {
+                if (p0.lastLocation != null) {
+                    locationViewModel.setCoordinates(
+                        p0.lastLocation!!.latitude,
+                        p0.lastLocation!!.longitude
+                    )
+                }
             }
         }
-        return super.onOptionsItemSelected(item)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissionLauncher.launch(
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        } else {
+            fusedLocationClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                Looper.getMainLooper()
+            )
+        }
     }
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                followUserLocation()
+            }
+        }
 
     override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
-}
+
+
+
+
+    }
