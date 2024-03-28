@@ -1,4 +1,4 @@
-package elfak.mosis.cityexplorer.model
+package elfak.mosis.cityexplorer
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

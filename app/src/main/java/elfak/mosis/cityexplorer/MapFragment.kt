@@ -1,12 +1,12 @@
 package elfak.mosis.cityexplorer
 
+import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -15,9 +15,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import elfak.mosis.cityexplorer.data.MyPlaces
-import elfak.mosis.cityexplorer.model.LocationViewModel
-import elfak.mosis.cityexplorer.model.UserViewModel
 import org.osmdroid.config.Configuration
 import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.util.GeoPoint
@@ -226,60 +223,48 @@ class MapFragment : Fragment() {
         map.overlays.add(overlayEvents)
 
     }
-    private fun markAllPlaces()
-    {
 
-        for(myPlace in placesArray)
-        {
-            val sPoint= GeoPoint(myPlace.latitude!!.toDouble(),myPlace.longitude!!.toDouble())
-            sharedViewModel.addOne(Coordinates(myPlace.latitude!!.toDouble(),myPlace.longitude!!.toDouble(),myPlace.name.toString()))
-            val marker = Marker(map)
-            marker.position = sPoint
-            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM) // Postavljanje tačke spajanja markera
-            marker.title = myPlace.name
-            marker.subDescription = "Place added by: "+myPlace.author+"<br>"+"Type: "+myPlace.type+"<br>"+"Grade:"+myPlace.grade+"<br>"
-
-
-            // Dodavanje markera na mapu
-            map.overlays.add(marker)
-            map.invalidate()
-
-
-
-        }
-
-    }
-    private fun markOthersPlaces()
-    {
-
-        for(myPlace in placesArray)
-        {
-            //AKO SE IZ NIZA SVIH MESTA NADJE NEKI KOGA NIJE DODAO TRENUTNI KORISNIK
-            if(myPlace.author!=sharedViewModel.name) {
-                //DODAJ TO MESTO U NIZ KOORDINATA
-                sharedViewModel.addOne(Coordinates(myPlace.latitude!!.toDouble(), myPlace.longitude!!.toDouble(),myPlace.name.toString()))
-                //OBELEZI GA
-                val sPoint= GeoPoint(myPlace.latitude!!.toDouble(),myPlace.longitude!!.toDouble())
+    private fun markAllPlaces() {
+        for (myPlace in placesArray) {
+            if (myPlace != null && myPlace.latitude != null && myPlace.longitude != null) {
+                val sPoint = GeoPoint(myPlace.latitude!!.toDouble(), myPlace.longitude!!.toDouble())
+                sharedViewModel.addOne(Coordinates(myPlace.latitude!!.toDouble(), myPlace.longitude!!.toDouble(), myPlace.name.toString()))
                 val marker = Marker(map)
                 marker.position = sPoint
-                marker.setAnchor(
-                    Marker.ANCHOR_CENTER,
-                    Marker.ANCHOR_BOTTOM
-                ) // Postavljanje tačke spajanja markera
+                marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
                 marker.title = myPlace.name
-                marker.subDescription =
-                    "Place added by:" + myPlace.author + "<br>" + "Type:" + myPlace.type + "<br>" + "Grade: " + myPlace.grade + "<br>"
-
-
-                // Dodavanje markera na mapu
+                marker.subDescription = "Place added by: ${myPlace.author}<br>Type: ${myPlace.type}<br>Grade: ${myPlace.grade}<br>"
+                map.overlays.add(marker)
+                map.invalidate()
+            } else {
+                Log.e(TAG, "Latitude or longitude is null for place: $myPlace")
+            }
+        }
+    }
+    private fun markOthersPlaces() {
+        if (placesArray.isNullOrEmpty()) {
+            // Dodajte kod za upravljanje situacijom kada placesArray nije inicijalizovan ili je prazan
+            return
+        }
+        for (myPlace in placesArray) {
+            if (myPlace.author != sharedViewModel.name && myPlace.latitude != null && myPlace.longitude != null) {
+                sharedViewModel.addOne(
+                    Coordinates(
+                        myPlace.latitude!!.toDouble(),
+                        myPlace.longitude!!.toDouble(),
+                        myPlace.name.toString()
+                    )
+                )
+                val sPoint = GeoPoint(myPlace.latitude!!.toDouble(), myPlace.longitude!!.toDouble())
+                val marker = Marker(map)
+                marker.position = sPoint
+                marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                marker.title = myPlace.name
+                marker.subDescription = "Place added by: ${myPlace.author}<br>Type: ${myPlace.type}<br>Grade: ${myPlace.grade}<br>"
                 map.overlays.add(marker)
                 map.invalidate()
             }
-
-
-
         }
-
     }
     private fun allowClicksOnOthersLocations() {
         val myLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(requireContext()), map)
@@ -298,27 +283,29 @@ class MapFragment : Fragment() {
                     var i:Int=0
                     for(placeN in othersPlaces)
                     {
-                        var objPoint=GeoPoint(placeN.latitude!!.toDouble(),placeN.longitude!!.toDouble())
-                        if(endPoint.distanceToAsDouble(objPoint)<=60)
-                        {
-                            exists=true
-                            val lon = clickedPoint.longitude.toString()
-                            val lati = clickedPoint.latitude.toString()
-                            if(sharedViewModel.comment==true) {
-                                locationViewModel.setLocationAndNameComment(
-                                    lon,
-                                    lati,
-                                    placeN.name.toString(),
-                                    true
-                                )
-                            }
-                            else if(sharedViewModel.updateDelete==true)
+                        if (placeN.latitude != null && placeN.longitude != null) {
+                            var objPoint = GeoPoint(placeN.latitude!!.toDouble(), placeN.longitude!!.toDouble())
+                            if(endPoint.distanceToAsDouble(objPoint)<=60)
                             {
-                                locationViewModel.setLocationAndName(lon,lati,placeN.name.toString(),true)
-                            }
-                            findNavController().popBackStack()
-                            return true
-                        }
+                                exists=true
+                                val lon = clickedPoint.longitude.toString()
+                                val lati = clickedPoint.latitude.toString()
+                                if(sharedViewModel.comment==true) {
+                                    locationViewModel.setLocationAndNameComment(
+                                        lon,
+                                        lati,
+                                        placeN.name.toString(),
+                                        true
+                                    )
+                                }
+                                else if(sharedViewModel.updateDelete==true)
+                                {
+                                    locationViewModel.setLocationAndName(lon,lati,placeN.name.toString(),true)
+                                }
+                                findNavController().popBackStack()
+                                return true
+                            }                        }
+
 
 
                     }

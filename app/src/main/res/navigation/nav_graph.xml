@@ -30,6 +30,18 @@
         <action
             android:id="@+id/action_HomeFragment_to_InfoFragment"
             app:destination="@+id/InfoFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_MyPlacesFragment"
+            app:destination="@+id/MyPlacesFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_CommentGradeFragment"
+            app:destination="@+id/CommentGradeFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_MyCommentFragment"
+            app:destination="@+id/MyCommentFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_SearchObjectFragment"
+            app:destination="@+id/SearchObjectFragment" />
 
 
     </fragment>
@@ -60,15 +72,7 @@
             android:id="@+id/action_EditFragment_to_HomeFragment"
             app:destination="@+id/HomeFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/ViewFragment"
-        android:name="elfak.mosis.cityexplorer.ViewFragment"
-        android:label="View My Place"
-        tools:layout="@layout/fragment_view">
-        <action
-            android:id="@+id/action_ViewFragment_to_ListFragment"
-            app:destination="@+id/ListFragment"/>
-    </fragment>
+
     <fragment
         android:id="@+id/MapFragment"
         android:name="elfak.mosis.cityexplorer.MapFragment"
@@ -86,7 +90,7 @@
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_LoginFragment_to_RegistrationFragment"
-            app:destination="@+id/RegisterFragment" />
+            app:destination="@+id/RegistrationFragment" />
         <action
             android:id="@+id/action_LoginFragment_to_HomeFragment"
             app:destination="@+id/HomeFragment" />
@@ -113,7 +117,7 @@
         android:id="@+id/InfoFragment"
         android:name="elfak.mosis.cityexplorer.InfoFragment"
         android:label="Info"
-        tools:layout="@layout/fragment_view">
+        tools:layout="@layout/fragment_info">
         <action
             android:id="@+id/action_ViewFragment_to_ListFragment"
             app:destination="@+id/ListFragment"/>
@@ -183,6 +187,13 @@
             android:id="@+id/action_SearchObjectFragment_to_CommentGradeFragment"
             app:destination="@+id/CommentGradeFragment" />
 
+    </fragment>
+    <fragment
+        android:id="@+id/MyCommentFragment"
+        android:name="elfak.mosis.cityexplorer.MyCommentFragment"
+        android:label="My Comments"
+        tools:layout="@layout/fragment_my_comment"
+        tools:ignore = "ExtraText">
     </fragment>
 
 

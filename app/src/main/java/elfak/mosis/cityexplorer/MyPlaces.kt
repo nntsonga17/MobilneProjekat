@@ -1,4 +1,4 @@
-package elfak.mosis.cityexplorer.data
+package elfak.mosis.cityexplorer
 
 data class MyPlaces(var  name: String? = null,
                     var comment: String? = null,

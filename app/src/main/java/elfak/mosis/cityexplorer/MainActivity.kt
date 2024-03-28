@@ -14,8 +14,6 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import elfak.mosis.cityexplorer.model.LocationViewModel
-import org.osmdroid.util.GeoPoint
 
 
 class MainActivity : AppCompatActivity() {
@@ -24,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setSupportActionBar(findViewById(R.id.toolbar))
         val navHostFragment=supportFragmentManager.findFragmentById(R.id.fragment) as NavHostFragment
         navController=navHostFragment.navController;
         setupActionBarWithNavController(navController)

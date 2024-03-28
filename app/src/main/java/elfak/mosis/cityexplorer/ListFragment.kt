@@ -15,8 +15,6 @@ import android.widget.TableRow
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import elfak.mosis.cityexplorer.data.UserData
-import elfak.mosis.cityexplorer.model.UserViewModel
 import java.util.ArrayList
 
 

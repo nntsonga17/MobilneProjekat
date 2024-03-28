@@ -12,8 +12,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
-import elfak.mosis.cityexplorer.data.UserData
-import elfak.mosis.cityexplorer.model.UserViewModel
 import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
@@ -143,7 +141,7 @@ class EditUserFragment : Fragment() {
             var name = firstname.text.toString()
             var surname = lastname.text.toString()
             var numberPhone = phonenumber.text.toString()
-            user=UserData(user1,pass1,name,surname,numberPhone, imgUrl ,
+            user= UserData(user1,pass1,name,surname,numberPhone, imgUrl ,
                 ArrayList(),sharedViewModel.user.points
             )
             //AZURIRANJE SPOREDNIH(NE KLJUCNIH ATRIBUTA)
@@ -195,7 +193,7 @@ class EditUserFragment : Fragment() {
 
         return view
     }
-    private fun updateRealTimeDataBase(user:UserData)
+    private fun updateRealTimeDataBase(user: UserData)
     {
         if(user.username!=null)
         {

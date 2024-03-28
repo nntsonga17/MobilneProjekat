@@ -2,7 +2,6 @@ package elfak.mosis.cityexplorer
 
 import android.Manifest
 import android.app.Activity
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -14,31 +13,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.Spinner
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import elfak.mosis.cityexplorer.R.id.progressPlace
-import elfak.mosis.cityexplorer.data.MyPlaces
-import elfak.mosis.cityexplorer.data.UserData
-import elfak.mosis.cityexplorer.model.LocationViewModel
-import elfak.mosis.cityexplorer.model.UserViewModel
-import org.w3c.dom.Text
 import java.io.ByteArrayOutputStream
 import java.util.Calendar
 
@@ -51,22 +35,23 @@ class EditFragment : Fragment() {
 
 
 
-    private  val sharedViewModel:UserViewModel by activityViewModels()
+    private  val sharedViewModel: UserViewModel by activityViewModels()
 
     lateinit var placeName:EditText
     lateinit var description:EditText
     lateinit var grade:EditText
+    lateinit var type: EditText
     lateinit var progress:ProgressBar
     lateinit var save:Button
     lateinit var cancel:Button
-    lateinit var place: MyPlaces
+    var place: MyPlaces = MyPlaces()
     lateinit var latitude:EditText
     lateinit var longitude:EditText
     lateinit var set:Button
     lateinit var picture:ImageView
     ////////////////////////////////////////
     lateinit var pictureWait:ProgressBar
-    private val locationViewModel:LocationViewModel by activityViewModels()
+    private val locationViewModel: LocationViewModel by activityViewModels()
 
 
 
@@ -80,6 +65,7 @@ class EditFragment : Fragment() {
         picture.visibility=View.VISIBLE
         placeName=view.findViewById(R.id.editmyplace_name_edit)
         description=view.findViewById(R.id.editmyplace_desc_edit)
+        type = view.findViewById((R.id.editTextType))
         grade=view.findViewById(R.id.editmyplace_grade_edit)
         progress=view.findViewById(R.id.progressPlace)
         pictureWait=view.findViewById(R.id.pictureWait)
@@ -131,11 +117,22 @@ class EditFragment : Fragment() {
                     var time = instance.get(Calendar.HOUR_OF_DAY).toString() + ":" + instance.get(
                         Calendar.MINUTE
                     )
-                    var datumVreme = date + " at " + time
+                    var dateTime = date + " at " + time
                     progress.visibility = View.VISIBLE
                     if (description.text.toString().isEmpty()) {
                         descPom = ""
                     }
+                    place = MyPlaces(
+                        name = placeName.text.toString(),
+                        comment = descPom,
+                        grade = grade.text.toString(),
+                        type = type.text.toString(),
+                        img = imgUrl,
+                        datetime = dateTime,
+                        author = sharedViewModel.name,
+                        longitude = longitude.text.toString(),
+                        latitude = latitude.text.toString()
+                    )
 
 
                     val key = placeName.text.toString().replace(".", "").replace("#", "")
@@ -174,7 +171,7 @@ class EditFragment : Fragment() {
                                             snapshot.child("points").value.toString().toIntOrNull()
                                         )
                                         sharedViewModel.user.points =
-                                            sharedViewModel.user.points?.plus(10)
+                                            (sharedViewModel.user.points ?: 0) + 10
                                         DataBase.databaseUsers.child(
                                             sharedViewModel.name.replace(".", "").replace("#", "")
                                                 .replace("$", "").replace("[", "").replace("]", "")

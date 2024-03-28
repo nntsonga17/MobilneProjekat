@@ -25,9 +25,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
-import elfak.mosis.cityexplorer.data.MyPlaces
-import elfak.mosis.cityexplorer.model.LocationViewModel
-import elfak.mosis.cityexplorer.model.UserViewModel
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
@@ -84,6 +81,7 @@ class SearchObjectFragment : Fragment() {
         longitude=view.findViewById(R.id.filterLongitude)
         dateP=view.findViewById(R.id.FilterDate)
         dateI=view.findViewById(R.id.FilterDateI)
+        tableLayout = view.findViewById(R.id.tableFilter)
 
         val nizObserver= Observer<ArrayList<MyPlaces>>{ newValue->
             placeArray=newValue

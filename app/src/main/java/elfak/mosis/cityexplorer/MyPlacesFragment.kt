@@ -16,8 +16,6 @@ import androidx.navigation.fragment.findNavController
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import elfak.mosis.cityexplorer.data.MyPlaces
-import elfak.mosis.cityexplorer.model.UserViewModel
 
 
 class MyPlacesFragment : Fragment() {

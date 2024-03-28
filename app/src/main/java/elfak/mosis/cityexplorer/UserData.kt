@@ -1,4 +1,6 @@
-package elfak.mosis.cityexplorer.data
+package elfak.mosis.cityexplorer
+
+import elfak.mosis.cityexplorer.MyPlaces
 
 data class UserData(
     var username: String? = null,

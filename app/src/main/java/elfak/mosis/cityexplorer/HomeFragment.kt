@@ -1,7 +1,6 @@
 package elfak.mosis.cityexplorer
 
 import android.content.ContentValues.TAG
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -16,7 +15,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
@@ -27,41 +25,35 @@ import androidx.navigation.ui.NavigationUI
 import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import elfak.mosis.cityexplorer.data.MyPlaces
-import elfak.mosis.cityexplorer.data.UserData
-import elfak.mosis.cityexplorer.databinding.FragmentHomeBinding
-import elfak.mosis.cityexplorer.model.LocationViewModel
-import elfak.mosis.cityexplorer.model.UserViewModel
+import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
-import org.osmdroid.config.Configuration
 
-import java.util.zip.Inflater
+
 
 
 class HomeFragment : Fragment() {
 
-    lateinit var auth: FirebaseAuth
-    lateinit var textName:TextView
-    lateinit var database: DatabaseReference
-    val sharedViewModel: UserViewModel by activityViewModels()
-    val locationViewModel: LocationViewModel by activityViewModels()
-    lateinit var load: ProgressBar
-    lateinit var myPlacesU:Button
-    lateinit var addPlace:Button
-    lateinit var profilePic: ImageView
-    lateinit var commentPlace:Button
-    lateinit var myComments:Button
-    lateinit var search:Button
-    private lateinit var map: MapView
-    private var placesArray:ArrayList<MyPlaces> = ArrayList()
-    private lateinit var lastnameDatabase:TextView
+        lateinit var auth: FirebaseAuth
+        lateinit var textName:TextView
+        lateinit var database: DatabaseReference
+        val sharedViewModel: UserViewModel by activityViewModels()
+        val locationViewModel: LocationViewModel by activityViewModels()
+        lateinit var load: ProgressBar
+        lateinit var myPlacesU:Button
+        lateinit var addPlace:Button
+        lateinit var profilePic: ImageView
+        lateinit var commentPlace:Button
+        lateinit var myComments:Button
+        lateinit var search:Button
+        private lateinit var map: MapView
+        private var placesArray:ArrayList<MyPlaces> = ArrayList()
+        private lateinit var lastnameDatabase:TextView
 
 
 
@@ -86,8 +78,8 @@ class HomeFragment : Fragment() {
             database.child(key).get().addOnSuccessListener { snapshot ->
                 if (snapshot.exists()) {
                     textName.text = snapshot.child("name").value.toString()
-                    sharedViewModel.user= UserData(snapshot.child("username").value.toString(),snapshot.child("sifra").value.toString(),snapshot.child("ime").value.toString(),snapshot.child("prezime").value.toString(),snapshot.child("brojTelefona").value.toString().toLongOrNull(),snapshot.child("img").value.toString(),ArrayList(),snapshot.child("bodovi").value.toString().toInt())
-                    lastnameDatabase.text=snapshot.child("lastname").value.toString()
+                    sharedViewModel.user= UserData(snapshot.child("username").value.toString(),snapshot.child("password").value.toString(),snapshot.child("firstName").value.toString(),snapshot.child("lastName").value.toString(),snapshot.child("phoneNumber").value.toString(),snapshot.child("imageUrl").value.toString(),ArrayList(),snapshot.child("points").value.toString().toInt())
+                    lastnameDatabase.text=snapshot.child("lastName").value.toString()
                     val imageName=snapshot.child("imageUrl").value.toString()
                     if(imageName!="")
                     {
@@ -108,7 +100,7 @@ class HomeFragment : Fragment() {
         }
         myPlacesU=view.findViewById(R.id.buttonMyPlaces)
         myPlacesU.setOnClickListener{
-            findNavController().navigate(R.id.action_HomeFragment_to_mojaMestaFragment)
+            findNavController().navigate(R.id.action_HomeFragment_to_MyPlacesFragment)
         }
         addPlace=view.findViewById(R.id.buttonAddObject)
         addPlace.setOnClickListener{
@@ -121,19 +113,19 @@ class HomeFragment : Fragment() {
         commentPlace.setOnClickListener{
             sharedViewModel.comment=true
             sharedViewModel.updateDelete=false
-            findNavController().navigate(R.id.action_HomeFragment_to_komentarOcenaFragment)
+            findNavController().navigate(R.id.action_HomeFragment_to_CommentGradeFragment)
         }
         myComments=view.findViewById(R.id.buttonMyComments)
         myComments.setOnClickListener{
-            findNavController().navigate(R.id.action_homeFragment_to_svojiKomentariFragment)
+            findNavController().navigate(R.id.action_HomeFragment_to_MyCommentFragment)
         }
         search=view.findViewById(R.id.buttonSearch)
         search.setOnClickListener{
-            findNavController().navigate(R.id.action_homeFragment_to_pretraziObjekatFragment)
+            findNavController().navigate(R.id.action_HomeFragment_to_SearchObjectFragment)
         }
         var seeUserList=view.findViewById<Button>(R.id.buttonUserList)
         seeUserList.setOnClickListener{
-            findNavController().navigate(R.id.action_homeFragment_to_rangListaFragment)
+            findNavController().navigate(R.id.action_HomeFragment_to_ListFragment)
         }
         val nizObserver= Observer<ArrayList<MyPlaces>>{ newValue->
             placesArray=newValue
@@ -218,22 +210,21 @@ class HomeFragment : Fragment() {
         map.overlays.add(myLocationOverlay)
         map.controller.setCenter(myLocationOverlay.myLocation)
     }
-    private fun pinOnMap()
-    {
-
-        for(myplace in placesArray)
-        {
-            val sPoint= GeoPoint(myplace.latitude!!.toDouble(),myplace.longitude!!.toDouble())
-            val marker = Marker(map)
-            marker.position = sPoint
-            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM) // Postavljanje tačke spajanja markera
-            marker.title = myplace.name
-            marker.subDescription = "Added by:"+myplace.author+"<br>"+"Grade:"+myplace.grade
-            map.overlays.add(marker)
-            map.invalidate()
-
+    private fun pinOnMap() {
+        for (myplace in placesArray) {
+            if (myplace != null && myplace.latitude != null && myplace.longitude != null) {
+                val sPoint = GeoPoint(myplace.latitude!!.toDouble(), myplace.longitude!!.toDouble())
+                val marker = Marker(map)
+                marker.position = sPoint
+                marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                marker.title = myplace.name
+                marker.subDescription = "Added by: ${myplace.author}<br>Grade: ${myplace.grade}"
+                map.overlays.add(marker)
+                map.invalidate()
+            } else {
+                Log.e(TAG, "Latitude or longitude is null for place: $myplace")
+            }
         }
-
     }
     private fun setUpMap()
     {

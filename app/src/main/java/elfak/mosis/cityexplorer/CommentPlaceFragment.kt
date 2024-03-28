@@ -13,9 +13,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import elfak.mosis.cityexplorer.data.UserData
-import elfak.mosis.cityexplorer.model.LocationViewModel
-import elfak.mosis.cityexplorer.model.UserViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -198,7 +195,7 @@ class CommentPlaceFragment : Fragment() {
                                 {
                                     neutral=true
                                     changes=false
-                                    idUser=supportedN.id
+                                    idUser= supportedN.id.toString()
                                     break
 
 
@@ -210,7 +207,7 @@ class CommentPlaceFragment : Fragment() {
                                     //ODUZMI PRETHODNO DODAT NEGATIVNI I OBRISI GA IZ BAZE TAJ 1 TO 1 VEZU
                                     neutral=false
                                     changes=true
-                                    idUser=supportedN.id
+                                    idUser= supportedN.id.toString()
                                     break
 
 
@@ -221,7 +218,7 @@ class CommentPlaceFragment : Fragment() {
                             }
                             if(neutral==false&&changes==false)
                             {
-                                commentDatabase.positive = commentDatabase.positive.plus(1)
+                                commentDatabase.positive = commentDatabase.positive?.plus(1)
                                 DataBase.databaseComments.child(commentDatabase.id)
                                     .setValue(commentDatabase).addOnSuccessListener {
                                         var id = System.currentTimeMillis().toString()
@@ -277,7 +274,7 @@ class CommentPlaceFragment : Fragment() {
                             }
                             else if(neutral==true)
                             {
-                                commentDatabase.positive=commentDatabase.positive.minus(1)
+                                commentDatabase.positive= commentDatabase.positive?.minus(1)
                                 //AKO JE PRETHODNO TAJ KOMENTAR PODRZAO INDIKATOR JE TRUE
 
                                 DataBase.dataBaseOneToOne.child(idUser).removeValue().addOnSuccessListener {
@@ -327,8 +324,8 @@ class CommentPlaceFragment : Fragment() {
                             }
                             else if(changes==true)
                             {
-                                commentDatabase.negative=commentDatabase.negative.minus(1)
-                                commentDatabase.positive=commentDatabase.positive.plus(1)
+                                commentDatabase.negative= commentDatabase.negative?.minus(1)
+                                commentDatabase.positive= commentDatabase.positive?.plus(1)
                                 DataBase.dataBaseOneToOne.child(idUser).removeValue().addOnSuccessListener {DataBase.databaseComments.child(commentDatabase.id).setValue(commentDatabase).addOnSuccessListener {
                                     var id = System.currentTimeMillis().toString()
                                     var pozitivan = UserComment(
@@ -369,7 +366,7 @@ class CommentPlaceFragment : Fragment() {
                                 {
                                     neutral2=true
                                     change2=false
-                                    commentId=supported2.id
+                                    commentId= supported2.id!!
                                     break
 
 
@@ -379,7 +376,7 @@ class CommentPlaceFragment : Fragment() {
                                 {
                                     neutral2=false
                                     change2=true
-                                    commentId=supported2.id
+                                    commentId= supported2.id!!
                                     break
 
                                 }
@@ -387,7 +384,7 @@ class CommentPlaceFragment : Fragment() {
 
                             }
                             if(neutral2==false&&change2==false) {
-                                commentDatabase.negative = commentDatabase.negative.plus(1)
+                                commentDatabase.negative = commentDatabase.negative?.plus(1)
 
                                 DataBase.databaseComments.child(commentDatabase.id)
                                     .setValue(commentDatabase).addOnSuccessListener {
@@ -444,7 +441,7 @@ class CommentPlaceFragment : Fragment() {
                             }
                             else if(neutral2==true)
                             {
-                                commentDatabase.negative=commentDatabase.negative.minus(1)
+                                commentDatabase.negative= commentDatabase.negative?.minus(1)
                                 DataBase.dataBaseOneToOne.child(commentId).removeValue().addOnSuccessListener{
                                     DataBase.databaseComments.child(commentDatabase.id).setValue(commentDatabase).addOnSuccessListener {
                                         DataBase.databaseUsers.child(
@@ -491,8 +488,8 @@ class CommentPlaceFragment : Fragment() {
                             }
                             else if(change2==true)
                             {
-                                commentDatabase.positive=commentDatabase.positive.minus(1)
-                                commentDatabase.negative=commentDatabase.negative.plus(1)
+                                commentDatabase.positive= commentDatabase.positive?.minus(1)
+                                commentDatabase.negative= commentDatabase.negative?.plus(1)
                                 DataBase.dataBaseOneToOne.child(commentId).removeValue().addOnSuccessListener {
                                     var id=System.currentTimeMillis()
                                     var new=UserComment(id.toString(),sharedViewModel.name,negativeN.hint.toString(),false)

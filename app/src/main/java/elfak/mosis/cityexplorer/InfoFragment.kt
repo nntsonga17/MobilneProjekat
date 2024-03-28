@@ -9,7 +9,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
-import elfak.mosis.cityexplorer.model.UserViewModel
 
 
 class InfoFragment : Fragment() {

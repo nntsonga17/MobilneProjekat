@@ -15,10 +15,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import elfak.mosis.cityexplorer.data.MyPlaces
-import elfak.mosis.cityexplorer.data.UserData
-import elfak.mosis.cityexplorer.model.LocationViewModel
-import elfak.mosis.cityexplorer.model.UserViewModel
 import java.util.Calendar
 
 
@@ -73,6 +69,7 @@ class CommentGradeFragment : Fragment() {
         progressDatabase = view.findViewById(R.id.commentProgress)
         buttonInfo = view.findViewById(R.id.buttonInfo)
         progressPicture = view.findViewById(R.id.picProgress)
+        typeGrade = view.findViewById(R.id.commentGradeB)
         val bazaObserver= Observer<Boolean>{ newValue->
             buttonInfo.isEnabled=newValue
             allComments.isEnabled=newValue

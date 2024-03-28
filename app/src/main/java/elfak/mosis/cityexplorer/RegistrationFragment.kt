@@ -22,22 +22,22 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import android.Manifest
-import com.google.android.material.textfield.TextInputEditText
+import android.net.Uri
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import elfak.mosis.cityexplorer.R.layout.fragment_registration
-import elfak.mosis.cityexplorer.data.UserData
 import elfak.mosis.cityexplorer.databinding.FragmentRegistrationBinding
-import elfak.mosis.cityexplorer.model.UserViewModel
 import java.io.ByteArrayOutputStream
 
 
 
 class RegistrationFragment : Fragment() {
     private val CAMERA_PERMISSION_REQUEST_CODE = 1001
+    private val GALLERY_PERMISSION_REQUEST_CODE = 1002
     lateinit var editTextUsername: EditText
     lateinit var editTextPassword: EditText
     lateinit var buttonReg: Button
@@ -49,12 +49,13 @@ class RegistrationFragment : Fragment() {
     lateinit var progress: ProgressBar
     lateinit var database: DatabaseReference
     private lateinit var storageRef: StorageReference
-    lateinit var imgUrl: String
+    private var imgUrl: String = ""
     private val REQUEST_IMAGE_CAPTURE = 1
     lateinit var user: UserData
     private val sharedViewModel: UserViewModel by activityViewModels()
 
     private lateinit var openCameraButton: Button
+    private lateinit var openGalleryButton: Button
     private lateinit var imageView: ImageView
     private lateinit var pictureReg: ProgressBar
 
@@ -74,7 +75,8 @@ class RegistrationFragment : Fragment() {
         editTextFirstName = view.findViewById(R.id.firstName)
         editTextLastName = view.findViewById(R.id.lastName)
         progress = view.findViewById(R.id.progressBar1)
-        openCameraButton = view.findViewById(R.id.buttonPhoto)
+        openCameraButton = view.findViewById(R.id.buttonCamera)
+        openGalleryButton = view.findViewById(R.id.buttonGallery)
         imageView = view.findViewById(R.id.imageView6)
         storageRef = FirebaseStorage.getInstance().reference
         pictureReg = view.findViewById(R.id.PictureReg)
@@ -94,6 +96,19 @@ class RegistrationFragment : Fragment() {
                     requireActivity(),
                     arrayOf(Manifest.permission.CAMERA),
                     CAMERA_PERMISSION_REQUEST_CODE
+                )
+            }
+        }
+        openGalleryButton.setOnClickListener{
+            if (checkGalleryPermission()) {
+                val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                startActivityForResult(galleryIntent, GALLERY_PERMISSION_REQUEST_CODE)
+            } else {
+                // Ako dozvola nije odobrena, zahtevajte je
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    GALLERY_PERMISSION_REQUEST_CODE
                 )
             }
         }
@@ -153,41 +168,77 @@ class RegistrationFragment : Fragment() {
             Manifest.permission.CAMERA
         ) == PackageManager.PERMISSION_GRANTED
     }
+    private fun checkGalleryPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
+    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
+            //ZA SETOVANJE IMAGE VIEW-A
             imageView.setImageBitmap(imageBitmap)
-            // Create a reference to the image file in Firebase Storage
-            val imagesRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
-            imageView.visibility=View.GONE
-            pictureReg.visibility=View.VISIBLE
-            // Convert the bitmap to bytes
-            val baos = ByteArrayOutputStream()
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-            val imageData = baos.toByteArray()
+            sendPicutreToFirestorageDownloadURLSendToRealtimeDatabase(imageBitmap)
+        }
+        if (requestCode == GALLERY_PERMISSION_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+            // Ovde obrada rezultata odabira slike iz galerije
+            val selectedImageUri: Uri? = data.data
+            if (selectedImageUri != null) {
+                // Očitavanje slike iz URI i postavljanje u ImageView
+                val imageBitmap = MediaStore.Images.Media.getBitmap(
+                    requireContext().contentResolver,
+                    selectedImageUri
+                )
+                imageView.setImageBitmap(imageBitmap)
 
-            // Upload the image to Firebase Storage
-            val uploadTask = imagesRef.putBytes(imageData)
-            uploadTask.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Image upload success
-                    // Now you can get the download URL of the image and save it to the database
-                    imagesRef.downloadUrl.addOnSuccessListener { uri ->
-                        // Save the URI to the database or use it as needed
-                        imgUrl = uri.toString()
-                        sharedViewModel.imageUrl=imgUrl
-                        pictureReg.visibility=View.GONE
-                        imageView.visibility=View.VISIBLE
-                        // Add the code to save the URL to the user's data in Firebase Database here
-                    }.addOnFailureListener { exception ->
-                        // Handle any errors that may occur while retrieving the download URL
-                        Toast.makeText(requireContext(), "Failed to get download URL.", Toast.LENGTH_SHORT).show()
-                    }
-                } else {
-                    // Image upload failed
-                    val errorMessage = task.exception?.message
-                    Toast.makeText(requireContext(), "Image upload failed. Error: $errorMessage", Toast.LENGTH_SHORT).show()
-                }
+                // Otpremanje slike na Firebase Storage
+                sendPicutreToFirestorageDownloadURLSendToRealtimeDatabase(imageBitmap)
+
             }
         }
-}}
+    }
+    private fun sendPicutreToFirestorageDownloadURLSendToRealtimeDatabase(imageBitmap:Bitmap)
+    {
+        val imagesRef = DataBase.storageRef.child("images/${System.currentTimeMillis()}.jpg")
+        imageView.visibility=View.GONE
+        pictureReg.visibility=View.VISIBLE
+        // Convert the bitmap to bytes
+        val baos = ByteArrayOutputStream()
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val imageData = baos.toByteArray()
+
+        // Upload the image to Firebase Storage
+        val uploadTask = imagesRef.putBytes(imageData)
+        uploadTask.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // Image upload success
+                // Now you can get the download URL of the image and save it to the database
+                imagesRef.downloadUrl.addOnSuccessListener { uri ->
+                    // Save the URI to the database or use it as needed
+                    imgUrl = uri.toString()
+                    imageView.visibility=View.GONE
+                    imageView.visibility=View.VISIBLE
+                    Toast.makeText(context,"Picture saved",Toast.LENGTH_SHORT).show()
+                    // Add the code to save the URL to the user's data in Firebase Database here
+                }.addOnFailureListener { exception ->
+                    // Handle any errors that may occur while retrieving the download URL
+                    Toast.makeText(
+                        requireContext(),
+                        "Failed to get download URL.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } else {
+                // Image upload failed
+                val errorMessage = task.exception?.message
+                Toast.makeText(
+                    requireContext(),
+                    "Image upload failed. Error: $errorMessage",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+}

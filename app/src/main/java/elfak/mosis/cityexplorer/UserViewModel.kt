@@ -1,4 +1,4 @@
-package elfak.mosis.cityexplorer.model
+package elfak.mosis.cityexplorer
 
 import android.content.ContentValues
 import android.util.Log
@@ -8,12 +8,6 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import elfak.mosis.cityexplorer.Comments
-import elfak.mosis.cityexplorer.Coordinates
-import elfak.mosis.cityexplorer.DataBase
-import elfak.mosis.cityexplorer.UserComment
-import elfak.mosis.cityexplorer.data.MyPlaces
-import elfak.mosis.cityexplorer.data.UserData
 
 class UserViewModel : ViewModel() {
     var id:Int=0
@@ -24,8 +18,8 @@ class UserViewModel : ViewModel() {
     var latitude=""
     var lastLongitude=""
     var lastLatitude=""
-    var user:UserData=UserData()
-    var place: MyPlaces =MyPlaces()
+    var user: UserData = UserData()
+    var place: MyPlaces = MyPlaces()
     var updateDelete=false
     var comment=false
     //SVI KORISNICI IZ BAZE

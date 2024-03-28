@@ -13,11 +13,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import elfak.mosis.cityexplorer.model.UserViewModel
 
 
 class MyCommentFragment : Fragment() {
-    val sharedViewModel:UserViewModel by activityViewModels()
+    val sharedViewModel: UserViewModel by activityViewModels()
     private lateinit var main: LinearLayout
     private var commentArray = ArrayList<Comments>()
 

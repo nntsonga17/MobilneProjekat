@@ -19,9 +19,6 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import elfak.mosis.cityexplorer.data.UserData
-import elfak.mosis.cityexplorer.model.LocationViewModel
-import elfak.mosis.cityexplorer.model.UserViewModel
 import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
@@ -29,7 +26,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
-import elfak.mosis.cityexplorer.data.MyPlaces
 import java.io.ByteArrayOutputStream
 
 
@@ -95,6 +91,7 @@ class DetailsFragment : Fragment() {
                     name.text = snapshot.child("name").value.toString()
                     description.setText( snapshot.child("comment").value.toString())
                     grade.setText(snapshot.child("grade").value.toString())
+                    type.setText( snapshot.child("type").value.toString())
                     oldLatitude.text=snapshot.child("latitude").value.toString()
                     oldLongitude.text=snapshot.child("longitude").value.toString()
                     sharedViewModel.latitude=oldLatitude.text.toString()
@@ -134,6 +131,7 @@ class DetailsFragment : Fragment() {
         }
         locationViewModel.latitude.observe(viewLifecycleOwner,latiObserver)
         var set:Button=view.findViewById(R.id.buttonSetU)
+
             set.setOnClickListener{
                 sharedViewModel.latitude=oldLatitude.text.toString()
                 sharedViewModel.longitude=oldLongitude.text.toString()
@@ -183,7 +181,7 @@ class DetailsFragment : Fragment() {
                 {
                     longi=longitude.text.toString()
                 }
-                val placeP = MyPlaces(name.text.toString(),description.text.toString(),grade.text.toString(),sharedViewModel.name,longi,lati,imgUrl)
+                val placeP = MyPlaces(name.text.toString(),description.text.toString(),grade.text.toString(), imgUrl, type.text.toString() , "", "", sharedViewModel.name,longi,lati)
 
                 DataBase.databasePlaces.child(key).setValue(placeP).addOnSuccessListener {
                     sharedViewModel.lastLatitude=placeP.latitude.toString()
@@ -261,7 +259,7 @@ class DetailsFragment : Fragment() {
                     .replace("[", "").replace("]", "")).get().addOnSuccessListener { snapshot->
                     if(snapshot.exists())
                     {
-                        sharedViewModel.user=UserData(snapshot.child("username").value.toString(),snapshot.child("password").value.toString(),snapshot.child("firstName").value.toString(),snapshot.child("lastName").value.toString(),snapshot.child("phoneNumber").value.toString(),snapshot.child("imageUrl").value.toString(),ArrayList(),snapshot.child("points").value.toString().toInt())
+                        sharedViewModel.user= UserData(snapshot.child("username").value.toString(),snapshot.child("password").value.toString(),snapshot.child("firstName").value.toString(),snapshot.child("lastName").value.toString(),snapshot.child("phoneNumber").value.toString(),snapshot.child("imageUrl").value.toString(),ArrayList(),snapshot.child("points").value.toString().toInt())
                         if(sharedViewModel.user.points!=null)
                         {
                             sharedViewModel.user.points=sharedViewModel.user.points?.minus(10)

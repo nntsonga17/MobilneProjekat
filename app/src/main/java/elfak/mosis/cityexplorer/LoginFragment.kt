@@ -15,7 +15,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
-import elfak.mosis.cityexplorer.model.UserViewModel
 
 
 class LoginFragment : Fragment() {
@@ -36,6 +35,7 @@ class LoginFragment : Fragment() {
         editTextPassword = view.findViewById(R.id.password)
         buttonLogin = view.findViewById(R.id.login_button)
         textView = view.findViewById(R.id.registerNow)
+        progress = view.findViewById(R.id.progressBar2)
 
         auth = FirebaseAuth.getInstance()
 
