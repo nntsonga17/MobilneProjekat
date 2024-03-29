@@ -126,6 +126,8 @@ class RegistrationFragment : Fragment() {
             val lastName = editTextLastName.text.toString()
 
 
+
+
             if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password) ||
                 TextUtils.isEmpty(firstName) || TextUtils.isEmpty(lastName) ||
                 TextUtils.isEmpty(phoneNumber)) {
@@ -138,9 +140,10 @@ class RegistrationFragment : Fragment() {
                     if (task.isSuccessful) {
                         progress.visibility = View.GONE
                         database= FirebaseDatabase.getInstance().getReference("Users")
-                        user = UserData(username, password, phoneNumber, firstName, lastName, sharedViewModel.imageUrl, ArrayList(), 0 )
+                        user = UserData(username, password, phoneNumber, firstName, lastName, imgUrl, ArrayList(), 0 )
                         val key = username.replace(".", " ").replace("#","").replace("$", "").replace("[", "").replace("]", "")
                         database.child(key).setValue(user).addOnSuccessListener {
+                            Log.d("ImageUrl", "Image URL: $imgUrl")
                             sharedViewModel.name = username
                             editTextUsername.text.clear()
                             editTextFirstName.text.clear()

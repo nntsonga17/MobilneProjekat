@@ -171,11 +171,12 @@ class EditFragment : Fragment() {
                                             snapshot.child("points").value.toString().toIntOrNull()
                                         )
                                         sharedViewModel.user.points =
-                                            (sharedViewModel.user.points ?: 0) + 10
+                                            sharedViewModel.user.points?.plus(10)
                                         DataBase.databaseUsers.child(
                                             sharedViewModel.name.replace(".", "").replace("#", "")
                                                 .replace("$", "").replace("[", "").replace("]", "")
                                         ).setValue(sharedViewModel.user).addOnSuccessListener {
+
 
                                             Toast.makeText(
                                                 context,
